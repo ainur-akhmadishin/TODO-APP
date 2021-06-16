@@ -62,7 +62,7 @@
     "*.js": [
       "npm run lint:fix",
       "npm run format",
-      "git add"
+	  "git add ."
     ]
   }
 }
