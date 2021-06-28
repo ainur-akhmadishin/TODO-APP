@@ -8,7 +8,29 @@ export default class App extends Component {
   newId = 100;
 
   state = {
-    todoData: [],
+    todoData: [
+      {
+        id: 1,
+        text: 'Completed task',
+        active: true,
+        edit: false,
+        addTime: new Date(),
+      },
+      {
+        id: 2,
+        text: 'Editing task',
+        active: true,
+        edit: false,
+        addTime: new Date(),
+      },
+      {
+        id: 3,
+        text: 'Active task',
+        active: true,
+        edit: false,
+        addTime: new Date(),
+      },
+    ],
     filters: 'all',
   };
 
