@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import { addMinutes, addSeconds } from 'date-fns';
 import NewTaskForm from '../new-task-form';
 import TaskList from '../task-list';
 import Footer from '../footer';
@@ -9,26 +8,7 @@ export default class App extends Component {
   newId = 100;
 
   state = {
-    todoData: [
-      {
-        id: 1,
-        text: 'Completed task',
-        active: false,
-        addTime: addSeconds(new Date(), -17),
-      },
-      {
-        id: 2,
-        text: 'Editing task',
-        active: true,
-        addTime: addMinutes(new Date(), -5),
-      },
-      {
-        id: 3,
-        text: 'Active task',
-        active: true,
-        addTime: addMinutes(new Date(), -15),
-      },
-    ],
+    todoData: [],
     filters: 'all',
   };
 
@@ -65,21 +45,58 @@ export default class App extends Component {
     });
   };
 
-  addTask = (text) => {
-    const newTask = {
-      id: this.newId + 1,
-      text,
-      active: true,
-      addTime: new Date(),
-    };
-
+  editForm = (id, text) => {
     this.setState(({ todoData }) => {
-      const newData = [newTask, ...todoData];
+      const idx = todoData.findIndex((el) => el.id === id);
+      const oldItem = todoData[idx];
+      const newItem = {
+        ...oldItem,
+        text,
+        edit: !oldItem.edit,
+      };
+      const newData = [...todoData.slice(0, idx), newItem, ...todoData.slice(idx + 1)];
 
       return {
         todoData: newData,
       };
     });
+  };
+
+  onEdit = (id) => {
+    this.setState(({ todoData }) => {
+      const idx = todoData.findIndex((el) => el.id === id);
+      const oldItem = todoData[idx];
+      const newItem = {
+        ...oldItem,
+        edit: !oldItem.edit,
+      };
+      const newData = [...todoData.slice(0, idx), newItem, ...todoData.slice(idx + 1)];
+
+      return {
+        todoData: newData,
+      };
+    });
+  };
+
+  addTask = (text) => {
+    if (text.length === 0) {
+      return;
+    }
+    const newTask = {
+      id: this.newId + 1,
+      text,
+      active: true,
+      edit: false,
+      addTime: new Date(),
+    };
+
+    this.setState(({ todoData }) => {
+      const newData = [newTask, ...todoData];
+      return {
+        todoData: newData,
+      };
+    });
+    this.newId = newTask.id;
   };
 
   btnClear = () => {
@@ -104,7 +121,14 @@ export default class App extends Component {
       <div className="todoapp">
         <NewTaskForm addTask={this.addTask} />
 
-        <TaskList todos={filter} onDelete={this.deleteItem} onActive={this.onActive} />
+        <TaskList
+          todos={filter}
+          onDelete={this.deleteItem}
+          onActive={this.onActive}
+          onEdit={this.onEdit}
+          addTask={this.addTask}
+          editForm={this.editForm}
+        />
         <Footer
           count={countComplected}
           filter={filter}
