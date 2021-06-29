@@ -51,7 +51,6 @@ export default class App extends Component {
 
   editForm = (id, text) => {
     if (text.length === 0) {
-      alert('Ошибка! Пустая строка!');
       return;
     }
 
