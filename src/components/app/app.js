@@ -8,31 +8,13 @@ export default class App extends Component {
   newId = 100;
 
   state = {
-    todoData: [
-      {
-        id: 1,
-        text: 'Completed task',
-        active: true,
-        edit: false,
-        addTime: new Date(),
-      },
-      {
-        id: 2,
-        text: 'Editing task',
-        active: true,
-        edit: false,
-        addTime: new Date(),
-      },
-      {
-        id: 3,
-        text: 'Active task',
-        active: true,
-        edit: false,
-        addTime: new Date(),
-      },
-    ],
+    todoData: [],
     filters: 'all',
   };
+
+  componentDidMount() {
+    ['Completed task', 'Editing task', 'Active task'].forEach((el) => this.addTask(el));
+  }
 
   onFilter = (item, value) => {
     if (value === 'active') return item.filter((el) => el.active);
@@ -68,6 +50,11 @@ export default class App extends Component {
   };
 
   editForm = (id, text) => {
+    if (text.length === 0) {
+      alert('Ошибка! Пустая строка!');
+      return;
+    }
+
     this.setState(({ todoData }) => {
       const idx = todoData.findIndex((el) => el.id === id);
       const oldItem = todoData[idx];
